@@ -11,13 +11,13 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Alpine.js for interactivity -->
+    <!-- Alpine.js for countdown -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -27,22 +27,23 @@
             font-family: 'Inter', sans-serif;
         }
 
-        h1, h2, h3, .display-font {
+        h1, h2, h3 {
             font-family: 'Space Grotesk', sans-serif;
         }
 
-        /* Custom Tailwind Config */
-        :root {
-            --navy: #0A1A3A;
-            --gold: #E0A030;
-        }
-
-        /* Gradient Text Animation */
+        /* Animated Gradient Background */
         @keyframes gradient-shift {
             0%, 100% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
         }
 
+        .animated-gradient {
+            background: linear-gradient(135deg, #0A1A3A, #1a3c6d, #2d5a8f, #1a3c6d, #0A1A3A);
+            background-size: 400% 400%;
+            animation: gradient-shift 20s ease infinite;
+        }
+
+        /* Gradient Text */
         .gradient-text {
             background: linear-gradient(90deg, #E0A030, #FFD700, #E0A030);
             background-size: 200% auto;
@@ -59,48 +60,35 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        /* Animated Background */
-        @keyframes bg-gradient {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
+        /* Floating Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
         }
 
-        .animated-gradient {
-            background: linear-gradient(135deg, #0A1A3A, #1a3c6d, #0A1A3A);
-            background-size: 400% 400%;
-            animation: bg-gradient 15s ease infinite;
+        .float {
+            animation: float 3s ease-in-out infinite;
         }
 
-        /* Scroll Reveal Animation */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease;
+        /* Pulse Glow */
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 40px rgba(224, 160, 48, 0.4); }
+            50% { box-shadow: 0 0 60px rgba(224, 160, 48, 0.8); }
         }
 
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
         }
 
-        /* Marquee */
-        @keyframes marquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-
-        .marquee {
-            animation: marquee 30s linear infinite;
-        }
-
-        /* Hover Glow */
-        .glow-on-hover:hover {
-            box-shadow: 0 0 30px rgba(224, 160, 48, 0.6);
+        /* Countdown Box */
+        .countdown-box {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(224, 160, 48, 0.3);
         }
     </style>
 
     <script>
-        // Tailwind Config
         tailwind.config = {
             theme: {
                 extend: {
@@ -117,120 +105,51 @@
         }
     </script>
 </head>
-<body class="bg-white text-gray-900 antialiased overflow-x-hidden">
+<body class="bg-navy antialiased overflow-x-hidden">
 
-    <!-- Navigation -->
-    <nav
-        x-data="{ scrolled: false, mobileMenuOpen: false }"
-        @scroll.window="scrolled = window.pageYOffset > 50"
-        :class="scrolled ? 'bg-white shadow-xl' : 'bg-white/95 backdrop-blur-lg'"
-        class="fixed w-full top-0 z-50 transition-all duration-300"
-    >
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-                <!-- Logo -->
-                <a href="#hero" class="flex items-center space-x-3">
-                    <img src="images/kasiad-logo.png" alt="KASİAD Logo" class="h-14 w-auto">
-                    <div class="hidden md:block">
-                        <p class="text-navy font-bold text-sm leading-tight">KAHRAMANMARAŞ</p>
-                        <p class="text-navy font-bold text-sm leading-tight">EKONOMİ ZİRVESİ</p>
-                    </div>
-                </a>
-
-                <!-- Desktop Menu -->
-                <div class="hidden lg:flex items-center space-x-8">
-                    <a href="#about" class="text-navy hover:text-gold transition-colors font-medium">Hakkında</a>
-                    <a href="#program" class="text-navy hover:text-gold transition-colors font-medium">Program</a>
-                    <a href="#speakers" class="text-navy hover:text-gold transition-colors font-medium">Konuşmacılar</a>
-                    <a href="#gallery" class="text-navy hover:text-gold transition-colors font-medium">Galeri</a>
-                    <a href="#sponsors" class="text-navy hover:text-gold transition-colors font-medium">Sponsorlar</a>
-                    <a href="#register" class="bg-navy hover:bg-gold text-white px-6 py-2.5 rounded-full font-semibold transition-all hover:scale-105 glow-on-hover">
-                        Kayıt Ol
-                    </a>
-                </div>
-
-                <!-- Mobile Menu Button -->
-                <button
-                    @click="mobileMenuOpen = !mobileMenuOpen"
-                    class="lg:hidden text-navy"
-                >
-                    <i class="fas fa-bars text-2xl"></i>
-                </button>
-            </div>
-        </div>
-
-        <!-- Mobile Menu -->
-        <div
-            x-show="mobileMenuOpen"
-            x-transition
-            class="lg:hidden bg-navy/95 backdrop-blur-lg"
-        >
-            <div class="px-4 py-6 space-y-4">
-                <a href="#about" class="block text-white hover:text-gold transition-colors font-medium py-2">Hakkında</a>
-                <a href="#program" class="block text-white hover:text-gold transition-colors font-medium py-2">Program</a>
-                <a href="#speakers" class="block text-white hover:text-gold transition-colors font-medium py-2">Konuşmacılar</a>
-                <a href="#gallery" class="block text-white hover:text-gold transition-colors font-medium py-2">Galeri</a>
-                <a href="#sponsors" class="block text-white hover:text-gold transition-colors font-medium py-2">Sponsorlar</a>
-                <a href="#register" class="block bg-gold text-navy px-6 py-3 rounded-full font-semibold text-center">
-                    Kayıt Ol
-                </a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="relative min-h-screen flex items-center justify-center overflow-hidden animated-gradient">
+    <!-- Main Landing Page -->
+    <section class="relative min-h-screen flex items-center justify-center animated-gradient">
         <!-- Overlay -->
         <div class="absolute inset-0 bg-gradient-to-b from-navy/80 via-navy/60 to-navy/80"></div>
 
-        <!-- Animated Shapes -->
+        <!-- Animated Background Shapes -->
         <div class="absolute inset-0 overflow-hidden opacity-20">
             <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-gold rounded-full blur-3xl animate-pulse"></div>
-            <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500 rounded-full blur-3xl animate-pulse delay-1000"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500 rounded-full blur-3xl animate-pulse"></div>
         </div>
 
         <!-- Content -->
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-20">
+
+            <!-- Logo -->
+            <div class="mb-8 flex justify-center">
+                <img src="images/kasiad-logo.png" alt="KASİAD Logo" class="h-20 sm:h-24 w-auto bg-white px-6 py-3 rounded-2xl shadow-2xl float">
+            </div>
+
             <!-- Badge -->
-            <div class="inline-flex items-center space-x-2 glass px-6 py-3 rounded-full mb-8 animate-bounce">
+            <div class="inline-flex items-center space-x-2 glass px-6 py-3 rounded-full mb-8">
                 <i class="fas fa-trophy text-gold"></i>
-                <span class="text-white font-semibold">3. YIL | 2025</span>
+                <span class="text-white font-semibold text-sm sm:text-base">3. YIL | 2025</span>
             </div>
 
             <!-- Main Title -->
-            <h1 class="font-display font-extrabold text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-white mb-6 leading-tight">
-                KASİAD<br>
+            <h1 class="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white mb-6 leading-tight">
                 KAHRAMANMARAŞ<br>
                 <span class="gradient-text">EKONOMİ ZİRVESİ</span>
             </h1>
 
+            <!-- Date -->
+            <p class="text-2xl sm:text-3xl md:text-4xl text-gold font-bold mb-4">
+                4-5 KASIM 2025
+            </p>
+
             <!-- Subtitle -->
-            <p class="text-xl sm:text-2xl md:text-3xl text-gray-300 font-light mb-12 max-w-4xl mx-auto">
+            <p class="text-lg sm:text-xl md:text-2xl text-gray-300 font-light mb-16 max-w-3xl mx-auto">
                 Türkiye'nin Ekonomik Geleceğini<br class="hidden sm:block">
                 Birlikte Şekillendiriyoruz
             </p>
 
-            <!-- Info Pills -->
-            <div class="flex flex-wrap justify-center gap-4 mb-12">
-                <div class="glass px-6 py-3 rounded-full">
-                    <i class="fas fa-calendar text-gold mr-2"></i>
-                    <span class="text-white font-medium">4-5 Kasım 2025</span>
-                </div>
-                <div class="glass px-6 py-3 rounded-full">
-                    <i class="fas fa-map-marker-alt text-gold mr-2"></i>
-                    <span class="text-white font-medium">Kahramanmaraş</span>
-                </div>
-                <div class="glass px-6 py-3 rounded-full">
-                    <i class="fas fa-users text-gold mr-2"></i>
-                    <span class="text-white font-medium">500+ Katılımcı</span>
-                </div>
-                <div class="glass px-6 py-3 rounded-full">
-                    <i class="fas fa-microphone text-gold mr-2"></i>
-                    <span class="text-white font-medium">30+ Konuşmacı</span>
-                </div>
-            </div>
-
-            <!-- Countdown -->
+            <!-- Countdown Timer -->
             <div
                 x-data="{
                     days: 0,
@@ -238,9 +157,9 @@
                     minutes: 0,
                     seconds: 0,
                     updateCountdown() {
-                        const target = new Date('2025-11-04T09:00:00').getTime();
+                        const eventDate = new Date('2025-11-04T09:00:00').getTime();
                         const now = new Date().getTime();
-                        const distance = target - now;
+                        const distance = eventDate - now;
 
                         this.days = Math.floor(distance / (1000 * 60 * 60 * 24));
                         this.hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -249,725 +168,102 @@
                     }
                 }"
                 x-init="updateCountdown(); setInterval(() => updateCountdown(), 1000)"
-                class="flex justify-center gap-4 mb-12"
+                class="mb-16"
             >
-                <div class="glass px-8 py-6 rounded-2xl text-center min-w-[100px]">
-                    <div class="text-4xl font-bold text-gold" x-text="days"></div>
-                    <div class="text-sm text-gray-300 mt-2">GÜN</div>
-                </div>
-                <div class="glass px-8 py-6 rounded-2xl text-center min-w-[100px]">
-                    <div class="text-4xl font-bold text-gold" x-text="hours"></div>
-                    <div class="text-sm text-gray-300 mt-2">SAAT</div>
-                </div>
-                <div class="glass px-8 py-6 rounded-2xl text-center min-w-[100px]">
-                    <div class="text-4xl font-bold text-gold" x-text="minutes"></div>
-                    <div class="text-sm text-gray-300 mt-2">DAKİKA</div>
-                </div>
-                <div class="glass px-8 py-6 rounded-2xl text-center min-w-[100px]">
-                    <div class="text-4xl font-bold text-gold" x-text="seconds"></div>
-                    <div class="text-sm text-gray-300 mt-2">SANİYE</div>
+                <p class="text-white text-lg sm:text-xl mb-6 font-semibold">ETKINLIĞE KALAN SÜRE</p>
+                <div class="grid grid-cols-4 gap-3 sm:gap-6 max-w-4xl mx-auto">
+                    <!-- Days -->
+                    <div class="countdown-box rounded-2xl p-4 sm:p-6 pulse-glow">
+                        <div class="text-4xl sm:text-5xl md:text-7xl font-bold text-gold mb-2" x-text="String(days).padStart(2, '0')">00</div>
+                        <div class="text-xs sm:text-sm md:text-base text-gray-300 font-medium uppercase">Gün</div>
+                    </div>
+                    <!-- Hours -->
+                    <div class="countdown-box rounded-2xl p-4 sm:p-6">
+                        <div class="text-4xl sm:text-5xl md:text-7xl font-bold text-white mb-2" x-text="String(hours).padStart(2, '0')">00</div>
+                        <div class="text-xs sm:text-sm md:text-base text-gray-300 font-medium uppercase">Saat</div>
+                    </div>
+                    <!-- Minutes -->
+                    <div class="countdown-box rounded-2xl p-4 sm:p-6">
+                        <div class="text-4xl sm:text-5xl md:text-7xl font-bold text-white mb-2" x-text="String(minutes).padStart(2, '0')">00</div>
+                        <div class="text-xs sm:text-sm md:text-base text-gray-300 font-medium uppercase">Dakika</div>
+                    </div>
+                    <!-- Seconds -->
+                    <div class="countdown-box rounded-2xl p-4 sm:p-6">
+                        <div class="text-4xl sm:text-5xl md:text-7xl font-bold text-white mb-2" x-text="String(seconds).padStart(2, '0')">00</div>
+                        <div class="text-xs sm:text-sm md:text-base text-gray-300 font-medium uppercase">Saniye</div>
+                    </div>
                 </div>
             </div>
 
-            <!-- CTAs -->
-            <div class="flex flex-col sm:flex-row justify-center gap-6">
-                <a href="#register" class="group relative inline-flex items-center justify-center px-10 py-5 bg-gold hover:bg-yellow-500 text-navy font-bold text-lg rounded-full transition-all hover:scale-105 glow-on-hover">
-                    <i class="fas fa-arrow-right mr-2 group-hover:translate-x-1 transition-transform"></i>
-                    Hemen Kayıt Ol
+            <!-- Info Pills -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12 max-w-4xl mx-auto">
+                <div class="glass px-4 py-4 rounded-2xl">
+                    <i class="fas fa-calendar text-gold text-2xl mb-2"></i>
+                    <p class="text-white font-semibold text-sm sm:text-base">4-5 Kasım 2025</p>
+                </div>
+                <div class="glass px-4 py-4 rounded-2xl">
+                    <i class="fas fa-map-marker-alt text-gold text-2xl mb-2"></i>
+                    <p class="text-white font-semibold text-sm sm:text-base">Kahramanmaraş</p>
+                </div>
+                <div class="glass px-4 py-4 rounded-2xl">
+                    <i class="fas fa-users text-gold text-2xl mb-2"></i>
+                    <p class="text-white font-semibold text-sm sm:text-base">500+ Katılımcı</p>
+                </div>
+                <div class="glass px-4 py-4 rounded-2xl">
+                    <i class="fas fa-microphone text-gold text-2xl mb-2"></i>
+                    <p class="text-white font-semibold text-sm sm:text-base">30+ Konuşmacı</p>
+                </div>
+            </div>
+
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+                <a href="mailto:info@kasiad.org.tr?subject=Ekonomi Zirvesi 2025 Hakkında Bilgi Talebi"
+                   class="inline-flex items-center px-8 py-4 bg-gold text-navy font-bold rounded-full hover:bg-yellow-500 transition-all hover:scale-105 pulse-glow text-base sm:text-lg">
+                    <i class="fas fa-envelope mr-2"></i>
+                    Bilgi Almak İstiyorum
                 </a>
-                <a href="#program" class="group inline-flex items-center justify-center px-10 py-5 bg-transparent border-2 border-white hover:bg-white/10 text-white font-bold text-lg rounded-full transition-all hover:scale-105">
-                    <i class="fas fa-arrow-down mr-2 group-hover:translate-y-1 transition-transform"></i>
-                    Programı Gör
+                <a href="mailto:info@kasiad.org.tr?subject=Ekonomi Zirvesi 2025 Erken Kayıt"
+                   class="inline-flex items-center px-8 py-4 glass text-white font-bold rounded-full hover:bg-white/20 transition-all hover:scale-105 text-base sm:text-lg">
+                    <i class="fas fa-ticket-alt mr-2"></i>
+                    Erken Kayıt
                 </a>
             </div>
 
-            <!-- Scroll Indicator -->
-            <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
-                <div class="text-white text-sm mb-2">SCROLL DOWN</div>
-                <i class="fas fa-chevron-down text-gold text-2xl"></i>
-            </div>
-        </div>
-    </section>
+            <!-- Footer Info -->
+            <div class="glass rounded-2xl p-6 sm:p-8 max-w-2xl mx-auto">
+                <p class="text-white font-semibold mb-4 text-lg">KASİAD</p>
+                <p class="text-gray-300 mb-4 text-sm sm:text-base">Kahramanmaraş Sanayici ve İş İnsanları Derneği</p>
 
-    <!-- Stats Marquee Banner -->
-    <div class="bg-gradient-to-r from-gold via-yellow-500 to-gold py-6 overflow-hidden">
-        <div class="flex whitespace-nowrap marquee">
-            <div class="flex items-center space-x-12 px-6">
-                <span class="text-navy font-bold text-xl">500+ KATILIMCI</span>
-                <span class="text-navy">•</span>
-                <span class="text-navy font-bold text-xl">30+ KONUŞMACI</span>
-                <span class="text-navy">•</span>
-                <span class="text-navy font-bold text-xl">15+ PANEL</span>
-                <span class="text-navy">•</span>
-                <span class="text-navy font-bold text-xl">2 GÜN</span>
-                <span class="text-navy">•</span>
-                <span class="text-navy font-bold text-xl">20+ KURULUŞ</span>
-                <span class="text-navy">•</span>
-            </div>
-            <div class="flex items-center space-x-12 px-6">
-                <span class="text-navy font-bold text-xl">500+ KATILIMCI</span>
-                <span class="text-navy">•</span>
-                <span class="text-navy font-bold text-xl">30+ KONUŞMACI</span>
-                <span class="text-navy">•</span>
-                <span class="text-navy font-bold text-xl">15+ PANEL</span>
-                <span class="text-navy">•</span>
-                <span class="text-navy font-bold text-xl">2 GÜN</span>
-                <span class="text-navy">•</span>
-                <span class="text-navy font-bold text-xl">20+ KURULUŞ</span>
-                <span class="text-navy">•</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- About Section -->
-    <section id="about" class="bg-navy py-20 lg:py-32">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid lg:grid-cols-2 gap-16 items-center">
-                <!-- Left: Content (Sticky) -->
-                <div class="lg:sticky lg:top-32 reveal">
-                    <span class="text-gold font-semibold text-sm uppercase tracking-wider">Hakkında</span>
-                    <h2 class="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white mt-4 mb-8">
-                        ZİRVE
-                    </h2>
-                    <div class="w-20 h-1 bg-gold mb-8"></div>
-
-                    <div class="space-y-6 text-gray-300 text-lg leading-relaxed">
-                        <p>
-                            <strong class="text-white">KASİAD Kahramanmaraş Ekonomi Zirvesi</strong>, Kahramanmaraş Sanayici ve İş İnsanları Derneği tarafından düzenlenen, Türkiye'nin ekonomik geleceğini şekillendiren önemli bir buluşma platformudur.
-                        </p>
-                        <p>
-                            2025 yılı zirvemizin teması <strong class="text-gold">"Dijital Dönüşüm ve Sürdürülebilir Büyüme"</strong> olarak belirlendi. İki gün boyunca, ülkemizin önde gelen ekonomistleri, iş insanları ve politika yapıcıları Kahramanmaraş'ta bir araya gelecek.
-                        </p>
-                        <p>
-                            2024 yılında Başkonuş Yaylası'nda gerçekleştirdiğimiz ikinci zirvemiz, 500'den fazla katılımcı ve 30'dan fazla konuşmacı ile büyük bir başarıya imza atmıştı.
-                        </p>
-                    </div>
-
-                    <!-- Stats -->
-                    <div class="grid grid-cols-3 gap-8 mt-12">
-                        <div>
-                            <div class="text-4xl font-bold text-gold">500+</div>
-                            <div class="text-gray-400 text-sm mt-2">Katılımcı</div>
-                        </div>
-                        <div>
-                            <div class="text-4xl font-bold text-gold">30+</div>
-                            <div class="text-gray-400 text-sm mt-2">Konuşmacı</div>
-                        </div>
-                        <div>
-                            <div class="text-4xl font-bold text-gold">2</div>
-                            <div class="text-gray-400 text-sm mt-2">Gün</div>
-                        </div>
-                    </div>
+                <!-- Contact -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6 text-sm sm:text-base">
+                    <a href="mailto:info@kasiad.org.tr" class="text-gold hover:text-yellow-500 transition-colors">
+                        <i class="fas fa-envelope mr-2"></i>info@kasiad.org.tr
+                    </a>
+                    <a href="tel:+903442212221" class="text-gold hover:text-yellow-500 transition-colors">
+                        <i class="fas fa-phone mr-2"></i>+90 (344) 221 22 21
+                    </a>
                 </div>
 
-                <!-- Right: Image Grid -->
-                <div class="grid grid-cols-2 gap-4 reveal">
-                    <div class="h-64 bg-gray-700 rounded-2xl overflow-hidden group cursor-pointer">
-                        <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600" alt="2024 Zirvesi" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                    </div>
-                    <div class="h-64 bg-gray-700 rounded-2xl overflow-hidden group cursor-pointer">
-                        <img src="https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=600" alt="Panel" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                    </div>
-                    <div class="h-64 bg-gray-700 rounded-2xl overflow-hidden group cursor-pointer">
-                        <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?w=600" alt="Networking" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                    </div>
-                    <div class="h-64 bg-gray-700 rounded-2xl overflow-hidden group cursor-pointer">
-                        <img src="https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=600" alt="Mekan" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Previous Edition Highlight -->
-    <section class="bg-white py-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <span class="text-gold font-semibold text-sm uppercase tracking-wider">Geçmiş Etkinlik</span>
-            <h2 class="font-display text-4xl md:text-5xl font-bold text-navy mt-4 mb-16">
-                2024 ZİRVESİ: BÜYÜK BAŞARI
-            </h2>
-
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- Video Highlight -->
-                <div class="bg-gray-100 rounded-2xl p-8 hover:shadow-2xl transition-shadow reveal">
-                    <div class="w-16 h-16 bg-gold rounded-full flex items-center justify-center mx-auto mb-6">
-                        <i class="fas fa-play text-navy text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-navy mb-4">Video Özeti</h3>
-                    <p class="text-gray-600">2024 zirvesinden en önemli anlar ve konuşmacı görüşleri</p>
-                </div>
-
-                <!-- Stats -->
-                <div class="bg-gradient-to-br from-navy to-blue-900 rounded-2xl p-8 text-white hover:shadow-2xl transition-shadow reveal">
-                    <div class="text-5xl font-bold text-gold mb-4">500+</div>
-                    <h3 class="text-xl font-bold mb-4">Katılımcı</h3>
-                    <p class="text-gray-300">25+ sektörden iş insanı ve yönetici</p>
-                </div>
-
-                <!-- Testimonial -->
-                <div class="bg-gray-100 rounded-2xl p-8 hover:shadow-2xl transition-shadow reveal">
-                    <div class="text-gold text-4xl mb-4">"</div>
-                    <p class="text-gray-700 italic mb-6">Harika bir networking fırsatı. Sektördeki liderlerle tanışma imkanı bulduk.</p>
-                    <p class="font-semibold text-navy">Ahmet Yılmaz</p>
-                    <p class="text-sm text-gray-500">CEO, Yılmaz Holding</p>
+                <!-- Social Media -->
+                <div class="flex justify-center space-x-4">
+                    <a href="#" class="w-10 h-10 bg-white/10 hover:bg-gold rounded-full flex items-center justify-center transition-all">
+                        <i class="fab fa-twitter text-white"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-white/10 hover:bg-gold rounded-full flex items-center justify-center transition-all">
+                        <i class="fab fa-linkedin text-white"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-white/10 hover:bg-gold rounded-full flex items-center justify-center transition-all">
+                        <i class="fab fa-instagram text-white"></i>
+                    </a>
                 </div>
             </div>
 
-            <p class="text-gray-600 mt-12 text-lg">
-                📅 29 Eylül 2024 | 📍 Başkonuş Yaylası, Kahramanmaraş
+            <!-- Copyright -->
+            <p class="text-gray-400 text-sm mt-8">
+                © 2025 KASİAD. Tüm hakları saklıdır.
             </p>
         </div>
     </section>
-
-    <!-- Program Section -->
-    <section id="program" class="bg-gray-50 py-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <span class="text-gold font-semibold text-sm uppercase tracking-wider">Program</span>
-                <h2 class="font-display text-4xl md:text-5xl font-bold text-navy mt-4 mb-4">
-                    PROGRAM & AJANDA
-                </h2>
-                <p class="text-xl text-gray-600">2 Gün Boyunca 15+ Oturum</p>
-                <div class="w-20 h-1 bg-gold mx-auto mt-6"></div>
-            </div>
-
-            <!-- Tabs -->
-            <div
-                x-data="{ activeDay: 'day1' }"
-                class="mb-12"
-            >
-                <div class="flex justify-center gap-4 mb-12">
-                    <button
-                        @click="activeDay = 'day1'"
-                        :class="activeDay === 'day1' ? 'bg-navy text-white' : 'bg-white text-navy'"
-                        class="px-8 py-4 rounded-full font-semibold text-lg transition-all hover:scale-105 shadow-lg"
-                    >
-                        <i class="fas fa-calendar-day mr-2"></i>
-                        4 KASIM - 1. Gün
-                    </button>
-                    <button
-                        @click="activeDay = 'day2'"
-                        :class="activeDay === 'day2' ? 'bg-navy text-white' : 'bg-white text-navy'"
-                        class="px-8 py-4 rounded-full font-semibold text-lg transition-all hover:scale-105 shadow-lg"
-                    >
-                        <i class="fas fa-calendar-day mr-2"></i>
-                        5 KASIM - 2. Gün
-                    </button>
-                </div>
-
-                <!-- Day 1 Program -->
-                <div x-show="activeDay === 'day1'" x-transition class="space-y-4 max-w-4xl mx-auto">
-                    <!-- Session Card -->
-                    <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-shadow border-l-4 border-gold">
-                        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                            <div class="flex-1">
-                                <div class="flex items-center gap-4 mb-3">
-                                    <span class="text-2xl font-bold text-navy">09:00</span>
-                                    <span class="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">Kayıt</span>
-                                </div>
-                                <h4 class="text-xl font-semibold text-navy mb-2">Kayıt ve Hoş Geldin Kahvesi</h4>
-                                <p class="text-gray-600">Katılımcı kayıtları ve networking</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-shadow border-l-4 border-navy">
-                        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                            <div class="flex-1">
-                                <div class="flex items-center gap-4 mb-3">
-                                    <span class="text-2xl font-bold text-navy">09:30</span>
-                                    <span class="px-3 py-1 bg-navy text-white text-sm rounded-full">Açılış</span>
-                                </div>
-                                <h4 class="text-xl font-semibold text-navy mb-2">Açılış Konuşması</h4>
-                                <p class="text-gray-600">KASİAD Yönetim Kurulu Başkanı ve Davetli Konuklar</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-shadow border-l-4 border-gold">
-                        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                            <div class="flex-1">
-                                <div class="flex items-center gap-4 mb-3">
-                                    <span class="text-2xl font-bold text-navy">10:15</span>
-                                    <span class="px-3 py-1 bg-gold text-navy text-sm rounded-full font-semibold">Keynote</span>
-                                </div>
-                                <h4 class="text-xl font-semibold text-navy mb-2">Türkiye Ekonomisinin 2025 Vizyonu</h4>
-                                <p class="text-gray-600">Konuşmacı: Prof. Dr. Ali Ağaoğlu (Ekonomist)</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-shadow border-l-4 border-blue-500">
-                        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                            <div class="flex-1">
-                                <div class="flex items-center gap-4 mb-3">
-                                    <span class="text-2xl font-bold text-navy">11:45</span>
-                                    <span class="px-3 py-1 bg-blue-500 text-white text-sm rounded-full">Panel</span>
-                                </div>
-                                <h4 class="text-xl font-semibold text-navy mb-2">Sanayi 4.0 ve Dijital Dönüşüm</h4>
-                                <p class="text-gray-600">Moderatör: Hakan Güldağ (Dünya Gazetesi Yön. Krl. Başkanı)</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-shadow border-l-4 border-green-500">
-                        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                            <div class="flex-1">
-                                <div class="flex items-center gap-4 mb-3">
-                                    <span class="text-2xl font-bold text-navy">13:00</span>
-                                    <span class="px-3 py-1 bg-green-500 text-white text-sm rounded-full">Yemek</span>
-                                </div>
-                                <h4 class="text-xl font-semibold text-navy mb-2">Öğle Yemeği & Networking</h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Day 2 Program -->
-                <div x-show="activeDay === 'day2'" x-transition class="space-y-4 max-w-4xl mx-auto">
-                    <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-shadow border-l-4 border-gold">
-                        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                            <div class="flex-1">
-                                <div class="flex items-center gap-4 mb-3">
-                                    <span class="text-2xl font-bold text-navy">09:30</span>
-                                    <span class="px-3 py-1 bg-gold text-navy text-sm rounded-full font-semibold">Keynote</span>
-                                </div>
-                                <h4 class="text-xl font-semibold text-navy mb-2">Tedarik Zinciri Yönetimi ve Lojistik</h4>
-                                <p class="text-gray-600">Küresel tedarik zincirleri ve Türkiye'nin rolü</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-shadow border-l-4 border-blue-500">
-                        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                            <div class="flex-1">
-                                <div class="flex items-center gap-4 mb-3">
-                                    <span class="text-2xl font-bold text-navy">11:00</span>
-                                    <span class="px-3 py-1 bg-blue-500 text-white text-sm rounded-full">Panel</span>
-                                </div>
-                                <h4 class="text-xl font-semibold text-navy mb-2">Finans ve Bankacılıkta Dijital Dönüşüm</h4>
-                                <p class="text-gray-600">Fintech, blockchain ve kripto paralar</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-shadow border-l-4 border-navy">
-                        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                            <div class="flex-1">
-                                <div class="flex items-center gap-4 mb-3">
-                                    <span class="text-2xl font-bold text-navy">15:30</span>
-                                    <span class="px-3 py-1 bg-navy text-white text-sm rounded-full">Kapanış</span>
-                                </div>
-                                <h4 class="text-xl font-semibold text-navy mb-2">2025'ten 2030'a Ekonomik Perspektif</h4>
-                                <p class="text-gray-600">Tüm konuşmacılar ve genel değerlendirme</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Download Button -->
-            <div class="text-center mt-12">
-                <a href="#" class="inline-flex items-center px-8 py-4 bg-navy text-white font-semibold rounded-full hover:bg-navy/90 transition-all hover:scale-105 shadow-lg">
-                    <i class="fas fa-download mr-3"></i>
-                    Detaylı Programı İndir (PDF)
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Speakers Section -->
-    <section id="speakers" class="bg-white py-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <span class="text-gold font-semibold text-sm uppercase tracking-wider">Konuşmacılar</span>
-                <h2 class="font-display text-4xl md:text-5xl font-bold text-navy mt-4 mb-4">
-                    KONUŞMACILAR
-                </h2>
-                <p class="text-xl text-gray-600">Alanında Lider İsimler</p>
-            </div>
-
-            <!-- Bento Grid -->
-            <div class="grid md:grid-cols-3 gap-6">
-                <!-- Large Speaker Card -->
-                <div class="md:row-span-2 group relative bg-gray-100 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
-                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=600" alt="Hakan Güldağ" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                    <div class="absolute inset-0 bg-gradient-to-t from-navy via-navy/70 to-transparent opacity-90"></div>
-                    <div class="absolute bottom-0 left-0 right-0 p-8 text-white">
-                        <h3 class="text-3xl font-bold mb-2">Hakan Güldağ</h3>
-                        <p class="text-gold font-semibold mb-1">Yönetim Kurulu Başkanı</p>
-                        <p class="text-gray-300">Dünya Gazetesi</p>
-                        <div class="mt-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <a href="#" class="inline-flex items-center text-gold hover:text-yellow-400">
-                                <i class="fab fa-linkedin mr-2"></i>
-                                LinkedIn Profili
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Regular Cards -->
-                <div class="group relative bg-gray-100 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all h-64">
-                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400" alt="Ali Ağaoğlu" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                    <div class="absolute inset-0 bg-gradient-to-t from-navy via-navy/70 to-transparent opacity-90"></div>
-                    <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
-                        <h3 class="text-xl font-bold mb-1">Prof. Dr. Ali Ağaoğlu</h3>
-                        <p class="text-gold text-sm font-semibold">Ekonomist</p>
-                        <p class="text-gray-300 text-sm">İstanbul Üniversitesi</p>
-                    </div>
-                </div>
-
-                <div class="group relative bg-gray-100 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all h-64">
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400" alt="Mehmet Balduk" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                    <div class="absolute inset-0 bg-gradient-to-t from-navy via-navy/70 to-transparent opacity-90"></div>
-                    <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
-                        <h3 class="text-xl font-bold mb-1">Mehmet Balduk</h3>
-                        <p class="text-gold text-sm font-semibold">Onursal Başkan</p>
-                        <p class="text-gray-300 text-sm">KASİAD</p>
-                    </div>
-                </div>
-
-                <div class="group relative bg-gray-100 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all h-64">
-                    <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400" alt="Derya Alparslan" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                    <div class="absolute inset-0 bg-gradient-to-t from-navy via-navy/70 to-transparent opacity-90"></div>
-                    <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
-                        <h3 class="text-xl font-bold mb-1">Derya Alparslan</h3>
-                        <p class="text-gold text-sm font-semibold">Müsteşar Yardımcısı</p>
-                        <p class="text-gray-300 text-sm">Sanayi ve Teknoloji Bakanlığı</p>
-                    </div>
-                </div>
-
-                <div class="md:col-span-2 group relative bg-gray-100 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all h-64">
-                    <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=800" alt="Dr. Zeynep Öztürk" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                    <div class="absolute inset-0 bg-gradient-to-t from-navy via-navy/70 to-transparent opacity-90"></div>
-                    <div class="absolute bottom-0 left-0 right-0 p-8 text-white">
-                        <h3 class="text-2xl font-bold mb-2">Dr. Zeynep Öztürk</h3>
-                        <p class="text-gold font-semibold mb-1">Enerji Politikaları Uzmanı</p>
-                        <p class="text-gray-300">Yeşil Enerji Enstitüsü</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="text-center mt-12">
-                <p class="text-gray-600 mb-6">Daha fazla konuşmacı yakında duyurulacak...</p>
-                <a href="#register" class="inline-flex items-center px-8 py-4 bg-gold text-navy font-semibold rounded-full hover:bg-yellow-500 transition-all hover:scale-105">
-                    Yerinizi Ayırtın
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Gallery Section -->
-    <section id="gallery" class="bg-navy py-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <span class="text-gold font-semibold text-sm uppercase tracking-wider">Galeri</span>
-                <h2 class="font-display text-4xl md:text-5xl font-bold text-white mt-4 mb-4">
-                    2024 ZİRVESİNDEN KARELER
-                </h2>
-                <p class="text-xl text-gray-300">Başkonuş Yaylası | 29 Eylül 2024</p>
-            </div>
-
-            <!-- Photo Grid -->
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <div class="group relative h-64 bg-gray-700 rounded-2xl overflow-hidden cursor-pointer">
-                    <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600" alt="Ana Oturum" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <div class="text-white text-center">
-                            <p class="text-lg font-semibold">Ana Oturum</p>
-                            <p class="text-sm text-gray-300">Açılış Konuşması</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="group relative h-64 bg-gray-700 rounded-2xl overflow-hidden cursor-pointer">
-                    <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?w=600" alt="Panel" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <div class="text-white text-center">
-                            <p class="text-lg font-semibold">Panel Tartışması</p>
-                            <p class="text-sm text-gray-300">Ekonomi ve Sanayi</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="group relative h-64 bg-gray-700 rounded-2xl overflow-hidden cursor-pointer">
-                    <img src="https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=600" alt="Networking" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <div class="text-white text-center">
-                            <p class="text-lg font-semibold">Networking</p>
-                            <p class="text-sm text-gray-300">Katılımcılar Arası Etkileşim</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="group relative h-64 bg-gray-700 rounded-2xl overflow-hidden cursor-pointer">
-                    <img src="https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=600" alt="Kahve Molası" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <div class="text-white text-center">
-                            <p class="text-lg font-semibold">Kahve Molası</p>
-                            <p class="text-sm text-gray-300">İkram ve Sohbet</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="group relative h-64 bg-gray-700 rounded-2xl overflow-hidden cursor-pointer">
-                    <img src="https://images.unsplash.com/photo-1591115765373-5207764f72e7?w=600" alt="Gala" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <div class="text-white text-center">
-                            <p class="text-lg font-semibold">Gala Yemeği</p>
-                            <p class="text-sm text-gray-300">Akşam Networking</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="group relative h-64 bg-gray-700 rounded-2xl overflow-hidden cursor-pointer">
-                    <img src="https://images.unsplash.com/photo-1431540015161-0bf868a2d407?w=600" alt="Toplu Foto" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <div class="text-white text-center">
-                            <p class="text-lg font-semibold">Toplu Fotoğraf</p>
-                            <p class="text-sm text-gray-300">Tüm Katılımcılar</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="text-center mt-12">
-                <button class="inline-flex items-center px-8 py-4 bg-gold text-navy font-semibold rounded-full hover:bg-yellow-500 transition-all hover:scale-105">
-                    <i class="fas fa-images mr-3"></i>
-                    Tüm Fotoğrafları Görüntüle
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Sponsors Section -->
-    <section id="sponsors" class="bg-white py-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <span class="text-gold font-semibold text-sm uppercase tracking-wider">Destekçilerimiz</span>
-                <h2 class="font-display text-4xl md:text-5xl font-bold text-navy mt-4 mb-4">
-                    TEŞEKKÜRLER SPONSORLARA
-                </h2>
-            </div>
-
-            <!-- Main Sponsor -->
-            <div class="mb-16">
-                <h3 class="text-2xl font-bold text-navy text-center mb-8">Ana Sponsor</h3>
-                <div class="flex justify-center">
-                    <div class="bg-white p-12 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow w-96">
-                        <div class="text-center">
-                            <div class="text-4xl font-bold text-navy mb-2">Dünya Gazetesi</div>
-                            <div class="text-gray-600">Medya Sponsoru</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Supporting Sponsors -->
-            <div>
-                <h3 class="text-2xl font-bold text-navy text-center mb-8">Destekleyen Kuruluşlar</h3>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    <div class="bg-gray-50 p-8 rounded-2xl flex items-center justify-center h-32 hover:shadow-lg transition-shadow grayscale hover:grayscale-0">
-                        <div class="text-center font-bold text-gray-700">Sponsor Logo</div>
-                    </div>
-                    <div class="bg-gray-50 p-8 rounded-2xl flex items-center justify-center h-32 hover:shadow-lg transition-shadow grayscale hover:grayscale-0">
-                        <div class="text-center font-bold text-gray-700">Sponsor Logo</div>
-                    </div>
-                    <div class="bg-gray-50 p-8 rounded-2xl flex items-center justify-center h-32 hover:shadow-lg transition-shadow grayscale hover:grayscale-0">
-                        <div class="text-center font-bold text-gray-700">Sponsor Logo</div>
-                    </div>
-                    <div class="bg-gray-50 p-8 rounded-2xl flex items-center justify-center h-32 hover:shadow-lg transition-shadow grayscale hover:grayscale-0">
-                        <div class="text-center font-bold text-gray-700">Sponsor Logo</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="text-center mt-12">
-                <p class="text-gray-600 mb-6">Etkinliğimize sponsor olmak ister misiniz?</p>
-                <a href="mailto:sponsorluk@kasiad.org.tr" class="inline-flex items-center px-8 py-4 bg-navy text-white font-semibold rounded-full hover:bg-navy/90 transition-all hover:scale-105">
-                    Sponsor Paketi İsteyin
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Registration Section -->
-    <section id="register" class="bg-gradient-to-br from-gold via-yellow-500 to-gold py-20 relative overflow-hidden">
-        <!-- Animated Background Elements -->
-        <div class="absolute inset-0 opacity-20">
-            <div class="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl animate-pulse"></div>
-            <div class="absolute bottom-0 right-0 w-96 h-96 bg-navy rounded-full blur-3xl animate-pulse delay-1000"></div>
-        </div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="grid lg:grid-cols-2 gap-12 items-center">
-                <!-- Left: Info -->
-                <div class="text-navy">
-                    <span class="text-navy/70 font-semibold text-sm uppercase tracking-wider">Kayıt</span>
-                    <h2 class="font-display text-5xl md:text-6xl font-bold mt-4 mb-8">
-                        YERİNİZİ ŞİMDİ AYIRTIN
-                    </h2>
-
-                    <div class="bg-white/30 backdrop-blur-sm rounded-2xl p-6 mb-8">
-                        <h3 class="text-2xl font-bold mb-4">Erken Kayıt İndirimi</h3>
-                        <p class="text-lg mb-2"><strong>15 Eylül'e kadar %30 indirim!</strong></p>
-                        <p class="text-navy/80">Standart: ₺5.000 → Erken Kayıt: ₺3.500</p>
-                    </div>
-
-                    <div class="space-y-4">
-                        <div class="flex items-center space-x-3">
-                            <i class="fas fa-check-circle text-2xl"></i>
-                            <span class="text-lg">2 gün boyunca tüm oturumlara erişim</span>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <i class="fas fa-check-circle text-2xl"></i>
-                            <span class="text-lg">Öğle yemekleri ve ikramlar dahil</span>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <i class="fas fa-check-circle text-2xl"></i>
-                            <span class="text-lg">Networking kokteyli ve gala yemeği</span>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <i class="fas fa-check-circle text-2xl"></i>
-                            <span class="text-lg">Zirve materyalleri ve sertifika</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Right: Form -->
-                <div class="bg-white rounded-3xl p-8 shadow-2xl">
-                    <h3 class="text-2xl font-bold text-navy mb-6">Hemen Kayıt Olun</h3>
-                    <form class="space-y-6">
-                        <div>
-                            <label class="block text-sm font-semibold text-navy mb-2">Ad Soyad *</label>
-                            <input type="text" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-gold focus:outline-none transition-colors" placeholder="Adınız Soyadınız">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-navy mb-2">E-posta *</label>
-                            <input type="email" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-gold focus:outline-none transition-colors" placeholder="ornek@email.com">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-navy mb-2">Telefon *</label>
-                            <input type="tel" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-gold focus:outline-none transition-colors" placeholder="+90 5XX XXX XX XX">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-navy mb-2">Şirket / Kuruluş</label>
-                            <input type="text" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-gold focus:outline-none transition-colors" placeholder="Şirket Adı">
-                        </div>
-                        <button type="submit" class="w-full bg-navy text-white font-bold py-4 rounded-xl hover:bg-navy/90 transition-all hover:scale-105 shadow-lg">
-                            <i class="fas fa-paper-plane mr-2"></i>
-                            KAYIT OL
-                        </button>
-                    </form>
-                    <p class="text-center text-sm text-gray-600 mt-6">
-                        Bilgi için: <a href="mailto:info@kasiad.org.tr" class="text-navy font-semibold hover:underline">info@kasiad.org.tr</a>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-navy text-white py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid md:grid-cols-4 gap-12 mb-12">
-                <!-- Logo Col -->
-                <div>
-                    <div class="mb-6">
-                        <img src="images/kasiad-logo.png" alt="KASİAD Logo" class="h-16 w-auto mb-4 bg-white px-4 py-2 rounded-lg">
-                        <p class="text-gold text-sm font-semibold">Ekonomi Zirvesi 2025</p>
-                    </div>
-                    <p class="text-gray-400 mb-6">Kahramanmaraş Sanayici ve İş İnsanları Derneği</p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="w-10 h-10 bg-white/10 hover:bg-gold rounded-full flex items-center justify-center transition-all">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 bg-white/10 hover:bg-gold rounded-full flex items-center justify-center transition-all">
-                            <i class="fab fa-linkedin"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 bg-white/10 hover:bg-gold rounded-full flex items-center justify-center transition-all">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Quick Links -->
-                <div>
-                    <h4 class="font-bold text-lg mb-6">Hızlı Linkler</h4>
-                    <ul class="space-y-3">
-                        <li><a href="#about" class="text-gray-400 hover:text-gold transition-colors">Hakkında</a></li>
-                        <li><a href="#program" class="text-gray-400 hover:text-gold transition-colors">Program</a></li>
-                        <li><a href="#speakers" class="text-gray-400 hover:text-gold transition-colors">Konuşmacılar</a></li>
-                        <li><a href="#gallery" class="text-gray-400 hover:text-gold transition-colors">Galeri</a></li>
-                    </ul>
-                </div>
-
-                <!-- Event Info -->
-                <div>
-                    <h4 class="font-bold text-lg mb-6">Etkinlik</h4>
-                    <ul class="space-y-3">
-                        <li><a href="#register" class="text-gray-400 hover:text-gold transition-colors">Kayıt Ol</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-gold transition-colors">SSS</a></li>
-                        <li><a href="#sponsors" class="text-gray-400 hover:text-gold transition-colors">Sponsor Olun</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-gold transition-colors">İletişim</a></li>
-                    </ul>
-                </div>
-
-                <!-- Contact -->
-                <div>
-                    <h4 class="font-bold text-lg mb-6">İletişim</h4>
-                    <ul class="space-y-3 text-gray-400">
-                        <li>
-                            <i class="fas fa-envelope text-gold mr-2"></i>
-                            info@kasiad.org.tr
-                        </li>
-                        <li>
-                            <i class="fas fa-phone text-gold mr-2"></i>
-                            +90 (344) XXX XX XX
-                        </li>
-                        <li>
-                            <i class="fas fa-map-marker-alt text-gold mr-2"></i>
-                            Kahramanmaraş, Türkiye
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Bottom Bar -->
-            <div class="border-t border-white/10 pt-8">
-                <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-                    <p class="text-gray-400 text-sm">
-                        © 2025 KASİAD. Tüm hakları saklıdır.
-                    </p>
-                    <div class="flex space-x-6 text-sm">
-                        <a href="#" class="text-gray-400 hover:text-gold transition-colors">Gizlilik Politikası</a>
-                        <a href="#" class="text-gray-400 hover:text-gold transition-colors">Kullanım Koşulları</a>
-                        <a href="#" class="text-gray-400 hover:text-gold transition-colors">KVKK</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Scroll Reveal Script -->
-    <script>
-        // Scroll Reveal Animation
-        const revealElements = document.querySelectorAll('.reveal');
-
-        const revealOnScroll = () => {
-            revealElements.forEach(element => {
-                const elementTop = element.getBoundingClientRect().top;
-                const windowHeight = window.innerHeight;
-
-                if (elementTop < windowHeight - 100) {
-                    element.classList.add('active');
-                }
-            });
-        };
-
-        window.addEventListener('scroll', revealOnScroll);
-        revealOnScroll();
-    </script>
 
 </body>
 </html>

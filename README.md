@@ -4,6 +4,12 @@
 
 Bu proje, 4-5 Kasım 2025 tarihlerinde Kahramanmaraş'ta düzenlenecek KASİAD Ekonomi Zirvesi için hazırlanmış modern ve premium bir etkinlik web sitesidir. [AI Tomorrow Summit](https://aitomorrowsummit.com/) tasarım ilhamıyla oluşturulmuştur.
 
+## 🌐 Sayfa Yapısı
+
+Proje iki sayfa içerir:
+- **`index.html`** - Ana landing/teaser sayfası (geri sayım ve CTA odaklı)
+- **`demo.html`** - Tam detaylı site (tüm bölümler)
+
 ## 🎯 Özellikler
 
 - ✅ Modern TailwindCSS framework
